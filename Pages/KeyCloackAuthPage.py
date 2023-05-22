@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from Pages.BasePage import BasePage
 
-#Описание страницы авторизации Key Cloack, Панели Управления, ОЗ, ПВЗ
-class KeyCloackAP:
+class KeyCloackAP(BasePage):
     URL = 'https://develop-cp.dev.svrauto.ru/auth/login'
     nameBar = (By.XPATH, '//input[@name="username"]')
     passwordBar = (By.XPATH, '//input[@name="password"]')
@@ -11,24 +11,13 @@ class KeyCloackAP:
     rememberMeChckBox = (By.XPATH, '//div[@name="rememberMe"]')
 
     def __init__(self, driver):
-        self.driver = driver
-
+        super().__init__(driver)
 
     def load(self):
-        self.driver.get(self.URL)
-        self.wait = WebDriverWait(self.driver, 10)
+        self._driver.get(self.URL)
+        self.wait = WebDriverWait(self._driver, 10)
 
-    def inputName(self, name):
-        self.driver.find_element(*self.nameBar).send_keys(name)
-        return self
-
-    def inputPass(self, password):
-        self.driver.find_element(*self.passwordBar).send_keys(password)
-        return self
-
-    def clickSubmit(self):
-        self.driver.find_element(*self.submitButton).click()
-
-    def clickForgot(self):
-        self.driver.find_element(*self.forgotPass).click()
-
+    def login(self, username, password):
+        self.fill_text(self.nameBar, username)
+        self.fill_text(self.passwordBar, password)
+        self.click(self.submitButton)
